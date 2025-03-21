@@ -1,0 +1,3 @@
+[submodule "web-payments-quickstart"]
+	path = web-payments-quickstart
+	url = https://github.com/square/web-payments-quickstart.git
