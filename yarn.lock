@@ -4211,6 +4211,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/lodash.debounce@npm:^4":
+  version: 4.0.9
+  resolution: "@types/lodash.debounce@npm:4.0.9"
+  dependencies:
+    "@types/lodash": "npm:*"
+  checksum: 10c0/9fbb24e5e52616faf60ba5c82d8c6517f4b86fc6e9ab353b4c56c0760f63d9bf53af3f2d8f6c37efa48090359fb96dba1087d497758511f6c40677002191d042
+  languageName: node
+  linkType: hard
+
+"@types/lodash@npm:*":
+  version: 4.17.16
+  resolution: "@types/lodash@npm:4.17.16"
+  checksum: 10c0/cf017901b8ab1d7aabc86d5189d9288f4f99f19a75caf020c0e2c77b8d4cead4db0d0b842d009b029339f92399f49f34377dd7c2721053388f251778b4c23534
+  languageName: node
+  linkType: hard
+
 "@types/long@npm:^4.0.0":
   version: 4.0.2
   resolution: "@types/long@npm:4.0.2"
@@ -5074,6 +5090,7 @@ __metadata:
     "@reduxjs/toolkit": "npm:^2.2.1"
     "@tabler/icons-preact": "npm:^3.28.1"
     "@tabler/icons-react": "npm:^3.30.0"
+    "@types/lodash.debounce": "npm:^4"
     "@types/react": "npm:18.2.25"
     "@types/supports-color": "npm:^10.0.0"
     "@vitejs/plugin-react": "npm:^4.2.1"
@@ -5104,6 +5121,7 @@ __metadata:
     jwt-decode: "npm:^4.0.0"
     konva: "npm:^9.3.18"
     lodash-es: "npm:^4.17.21"
+    lodash.debounce: "npm:^4.0.8"
     mapbox-gl: "npm:^3.9.3"
     node-fetch: "npm:^3.3.2"
     notistack: "npm:^3.0.1"
