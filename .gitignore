@@ -4,8 +4,7 @@ server/
 
 # Build outputs
 dist/
-ios/
-android/
+
 
 # Environment files
 .env
@@ -15,7 +14,7 @@ android/
 # Yarn files
 .yarn/
 .yarnrc.yml
-yarn.lock
+
 
 # Others
 package-lock.json
