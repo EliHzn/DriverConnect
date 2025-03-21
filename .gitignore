@@ -1,0 +1,22 @@
+# Node modules
+node_modules/
+server/
+
+# Build outputs
+dist/
+ios/
+android/
+
+# Environment files
+.env
+.env.production
+.env.qa
+
+# Yarn files
+.yarn/
+.yarnrc.yml
+yarn.lock
+
+# Others
+package-lock.json
+.DS_Store

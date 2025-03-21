@@ -1,0 +1,16 @@
+{
+    "pages": "Pages",
+    "pages-caption": "Prebuild Pages",
+    "maintenance": "Maintenance",
+    "error-404": "Error 404",
+    "error-500": "Error 500",
+    "coming-soon": "Coming Soon",
+    "under-construction": "Under Construction",
+    "contact-us": "Contact US",
+    "dashboard": "dashboard",
+    "documentation": "Documentation",
+    "roadmap": "Roadmap",
+    "social-profile": "Social Profile",
+    "account-settings": "Account settings",
+    "logout": "Logout"
+}
