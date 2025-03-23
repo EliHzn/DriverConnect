@@ -1,13 +1,10 @@
 // C:\Users\eliha\firebase\webapp\src\index.jsx
-// 1) ADD ERUDA
-import eruda from 'eruda';
-alert('Hello from index.jsx!');
+
 
 import { createRoot } from 'react-dom/client';
 
 
-// 2) INITIALIZE ERUDA
-eruda.init();
+
 
 // third party
 import { Provider } from 'react-redux';
