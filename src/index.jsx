@@ -1,3 +1,4 @@
+// C:\Users\eliha\firebase\webapp\src\index.jsx
 // 1) ADD ERUDA
 import eruda from 'eruda';
 alert('Hello from index.jsx!');
