@@ -1,7 +1,9 @@
-import { createRoot } from 'react-dom/client';
-
 // 1) ADD ERUDA
 import eruda from 'eruda';
+alert('Hello from index.jsx!');
+
+import { createRoot } from 'react-dom/client';
+
 
 // 2) INITIALIZE ERUDA
 eruda.init();
