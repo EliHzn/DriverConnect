@@ -3,7 +3,8 @@ import { useEffect, useRef, useState } from 'react';
 import { matchPath, useLocation } from 'react-router-dom';
 
 // material-ui
-import { alpha, styled, useTheme } from '@mui/material/styles';
+import { alpha, useTheme } from '@mui/material/styles';
+import styled from '@emotion/styled';
 import Box from '@mui/material/Box';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
 import Collapse from '@mui/material/Collapse';
