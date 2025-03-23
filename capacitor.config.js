@@ -5,7 +5,12 @@ const config = {
   appId: 'com.benandnino.driverapp',
   appName: 'DriverConnect',
   webDir: 'dist',        // path to built web assets
-  bundledWebRuntime: false
+  bundledWebRuntime: false,
+  // Example: using an environment variable (allowed in Appflow)
+  // plugins: {
+  //   LiveUpdates: {
+  //     channel: process.env.LIVE_UPDATE_CHANNEL_NAME  // dynamic config
+  //   }
+  // }
 };
-
 module.exports = config;
