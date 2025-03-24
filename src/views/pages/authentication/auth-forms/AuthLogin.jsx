@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-// Material-UI
 import { useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -26,106 +25,89 @@ import AnimateButton from 'ui-component/extended/AnimateButton';
 import useAuth from 'hooks/useAuth';
 import useScriptRef from 'hooks/useScriptRef';
 
-// Icons
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
-import axios from 'axios'; // Because TowDispatch uses axios
+import axios from 'axios';
 import { getAuth } from 'firebase/auth';
 import { getToken } from 'firebase/messaging';
-import { messaging } from 'src/firebase'; // Adjust if your firebase.js is elsewhere
+import { messaging } from 'src/firebase';
 
-// We'll use the same environment variable style as in TowDispatch
 const apiUrl = import.meta.env.VITE_APP_API_URL || '';
-
-// The same VAPID public key used in your other code
 const VAPID_PUBLIC_KEY = 'BBpE2HttzMN-Uz_Lb2lcu9IBfredug5y2sz49OPnBQ6eya-tuFBgiLr9kGJGgFfx0V78EHdRtwlM3AJClobnA4s';
 
 const JWTLogin = ({ loginProp, ...others }) => {
   const theme = useTheme();
-  const { login } = useAuth(); // your custom hook => signInWithEmailAndPassword
+  const { login } = useAuth();
   const scriptedRef = useScriptRef();
 
   const [checked, setChecked] = React.useState(true);
   const [showPassword, setShowPassword] = React.useState(false);
 
-  const handleClickShowPassword = () => {
-    setShowPassword(!showPassword);
-  };
-  const handleMouseDownPassword = (event) => {
-    event.preventDefault();
-  };
+  const handleClickShowPassword = () => setShowPassword(!showPassword);
+  const handleMouseDownPassword = (event) => event.preventDefault();
 
-  // Called after successful login to call /api/saveDeviceWithGeo
   const createDeviceServerSide = async () => {
-    // 1) Ask permission for notifications
-    const permission = await Notification.requestPermission();
-    if (permission !== 'granted') {
-      console.log('User denied notification permission. Skipping device doc creation.');
-      return;
-    }
-
-    // 2) Get an FCM token
-    const fcmToken = await getToken(messaging, { vapidKey: VAPID_PUBLIC_KEY });
-    if (!fcmToken) {
-      console.log('No FCM token (blocked or error).');
-      return;
-    }
-
-    // 3) Check or create deviceId in localStorage
-    let deviceId = localStorage.getItem('myDeviceId');
-    if (!deviceId) {
-      deviceId = 'dev_' + Math.random().toString(36).substring(2, 10);
-      localStorage.setItem('myDeviceId', deviceId);
-    }
-
-    // 4) Obtain the user's ID token for the Authorization header
-    const firebaseAuth = getAuth();
-    const user = firebaseAuth.currentUser;
-    if (!user) {
-      console.log('No Firebase user after login?');
-      return;
-    }
-    const idToken = await user.getIdToken(true);
-
-    // 5) Post to your server => /api/saveDeviceWithGeo
-    const headers = { Authorization: `Bearer ${idToken}` };
-    const payload = { deviceId, token: fcmToken };
-
     try {
+      const permission = await Notification.requestPermission();
+      if (permission !== 'granted') {
+        console.log('Notification permission not granted.');
+        return;
+      }
+
+      const fcmToken = await getToken(messaging, { vapidKey: VAPID_PUBLIC_KEY });
+      if (!fcmToken) {
+        console.log('FCM token unavailable.');
+        return;
+      }
+
+      let deviceId = localStorage.getItem('myDeviceId');
+      if (!deviceId) {
+        deviceId = 'dev_' + Math.random().toString(36).substring(2, 10);
+        localStorage.setItem('myDeviceId', deviceId);
+      }
+
+      const user = getAuth().currentUser;
+      if (!user) {
+        console.log('No Firebase user after login.');
+        return;
+      }
+
+      const idToken = await user.getIdToken(true);
+      const headers = { Authorization: `Bearer ${idToken}` };
+      const payload = { deviceId, token: fcmToken };
+
       await axios.post(`${apiUrl}/api/saveDeviceWithGeo`, payload, { headers });
-      console.log('Successfully called /api/saveDeviceWithGeo');
+      console.log('✅ /api/saveDeviceWithGeo succeeded.');
     } catch (err) {
-      console.error('Error calling /api/saveDeviceWithGeo:', err);
+      console.error('❌ Error in createDeviceServerSide:', err);
     }
   };
 
   return (
     <Formik
-      initialValues={{
-        email: '',
-        password: '',
-        submit: null
-      }}
+      initialValues={{ email: '', password: '', submit: null }}
       validationSchema={Yup.object().shape({
         email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
         password: Yup.string().max(255).required('Password is required')
       })}
       onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
+        console.log("🟢 Login button clicked with:", values);
         try {
-          // 1) Attempt to log in the user
+          console.log("🔐 Attempting Firebase login...");
           await login(values.email, values.password);
+          console.log("✅ Firebase login successful");
 
-          // 2) On success => gather device info server-side
+          console.log("📡 Registering device for notifications...");
           await createDeviceServerSide();
 
-          // 3) Wrap up Formik
           if (scriptedRef.current) {
             setStatus({ success: true });
             setSubmitting(false);
           }
         } catch (err) {
-          console.error('Login error:', err);
+          console.error("❌ Login failed:", err);
+          alert("Login failed: " + (err.message || "Unknown error"));
           if (scriptedRef.current) {
             setStatus({ success: false });
             setErrors({ submit: err.message });
@@ -141,7 +123,7 @@ const JWTLogin = ({ loginProp, ...others }) => {
             error={Boolean(touched.email && errors.email)}
             sx={{ ...theme.typography.customInput }}
           >
-            <InputLabel htmlFor="outlined-adornment-email-login">Email Address / Username</InputLabel>
+            <InputLabel htmlFor="outlined-adornment-email-login">Email Address</InputLabel>
             <OutlinedInput
               id="outlined-adornment-email-login"
               type="email"
@@ -149,10 +131,9 @@ const JWTLogin = ({ loginProp, ...others }) => {
               name="email"
               onBlur={handleBlur}
               onChange={handleChange}
-              inputProps={{}}
             />
             {touched.email && errors.email && (
-              <FormHelperText error id="standard-weight-helper-text-email-login">
+              <FormHelperText error id="email-error-text">
                 {errors.email}
               </FormHelperText>
             )}
@@ -174,22 +155,19 @@ const JWTLogin = ({ loginProp, ...others }) => {
               endAdornment={
                 <InputAdornment position="end">
                   <IconButton
-                    aria-label="toggle password visibility"
                     onClick={handleClickShowPassword}
                     onMouseDown={handleMouseDownPassword}
                     edge="end"
                     size="large"
-                    sx={{ color: 'inherit' }}
                   >
                     {showPassword ? <Visibility /> : <VisibilityOff />}
                   </IconButton>
                 </InputAdornment>
               }
-              inputProps={{}}
               label="Password"
             />
             {touched.password && errors.password && (
-              <FormHelperText error id="standard-weight-helper-text-password-login">
+              <FormHelperText error id="password-error-text">
                 {errors.password}
               </FormHelperText>
             )}
